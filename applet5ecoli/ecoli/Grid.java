@@ -186,11 +186,11 @@ public class Grid {
 				op[6] = new Pair(i+1, j);
 				op[7] = new Pair(i+1, j+1);		
 				
-				for (int i = 0; i < NEIGHBORS; i++)
+				for (int k = 0; k < NEIGHBORS; k++)
 				{
 					// remember coords
-					int x = op[i].x;
-					int y = op[i].y;
+					int x = op[k].x;
+					int y = op[k].y;
 					
 					// if not off the grid
 					if (x >= 0 && y >= 0 && x < dim && y < dim)
@@ -205,20 +205,26 @@ public class Grid {
 							bacGrid[x][y].addPoint(payoff.reward);
 						}
 						
-						if (typeSelf == COOPERATOR && typeOpponent == DEFECTOR)
+						else if (typeSelf == COOPERATOR && typeOpponent == DEFECTOR)
 						{
 							bacGrid[i][j].addPoint(payoff.sucker);
 							bacGrid[x][y].addPoint(payoff.temptation);
 						}
 						
-						if (typeSelf == COOPERATOR && typeOpponent == COOPERATOR)
+						else if (typeSelf == DEFECTOR && typeOpponent == COOPERATOR)
 						{
-							bacGrid[i][j].addPoint(payoff.reward);
-							bacGrid[x][y].addPoint(payoff.reward);
+							bacGrid[i][j].addPoint(payoff.temptation);
+							bacGrid[x][y].addPoint(payoff.sucker);
 						}
 						
-						if (typeSelf == DEFECTOR && typeOpponent == DEFECTOR)
+						else
 						{
+							if (typeSelf == DEFECTOR && typeOpponent == DEFECTOR)
+							{
+								// something didn't work out right
+								return false;
+							}
+							
 							bacGrid[i][j].addPoint(payoff.punishment);
 							bacGrid[x][y].addPoint(payoff.punishment);
 						}
@@ -228,6 +234,7 @@ public class Grid {
 			}
 		}
 		
+		return true;
 	}
 	
 }
