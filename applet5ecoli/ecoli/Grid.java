@@ -1,7 +1,15 @@
 package ecoli;
 import helpers.*;
+import java.util.*;
 
 public class Grid {
+	
+	// number of opponents each cell has (8 in a 2D grid)
+	public static final int NEIGHBORS = 8;
+	
+	// int values for cooperators and defects
+	public static final int COOPERATOR = 0;
+	public static final int DEFECTOR = 1;
 	
 	// dimension of the grid
 	public int dim;
@@ -10,18 +18,67 @@ public class Grid {
 	public int cNum;
 	public int dNum;
 	
-	// num replaced each round;
+	// number of bacteria replaced each round
 	public int repNum;
 	
-	public Grid (int dim, int cNum)
+	// prisoner's dilemma payoff
+	public PDPayoff payoff;
+	
+	// 2x2 array to hold Bacteria
+	public Bacteria[][] bacGrid;
+	
+	public Grid (int dim, int cNum, int reward, int sucker, int temptation, int punishment)
 	{
+		// initialized Grid
 		this.dim = dim;
 		this.cNum = cNum;
 		this.dNum = (dim * dim) - cNum;
+		
+		// keep track of cooperators and defectors created
+		int c = cNum;
+		int d = dNum;
+		
+		// create payoff matrix
+		payoff = new PDPayoff(reward, sucker, temptation, punishment);
+		
+		// populate the initial bacGrid
+		for (int i = 0; i < dim; i ++)
+		{
+			for (int j = 0; j < dim; j++)
+			{
+				// if no more cooperators or defectors to be created, create the other kind
+				if (c == 0)
+				{
+					bacGrid[i][j] = new Bacteria(DEFECTOR);
+				}
+				
+				if (d == 0)
+				{
+					bacGrid[i][j] = new Bacteria(COOPERATOR);
+				}
+				
+				// create random generator
+				Random generator = new Random();
+				
+				// generate random number between 0 and 1
+				double randomNum = generator.nextDouble();
+				
+				// sort randomNum using the c / (c+d) proportion
+				if (randomNum < ((double) c / (c + d)))
+				{
+					bacGrid[i][j] = new Bacteria(0);
+				}
+				
+				else
+				{
+					bacGrid[i][j]= new Bacteria(1);
+				}
+					
+				
+			}
+		}
+		
 	}
-	
-	// 2x2 array to hold Bacteria
-	public Bacteria[][] bacGrid = new Bacteria[dim][dim];
 	
 	// helper function to find lowest or highest n bacteria in Grid
 	public Pair[] lowHighN (boolean lower)
@@ -107,4 +164,70 @@ public class Grid {
 			return false;
 		}
 	}
+
+	// plays prisoner's dilemmma with each of the 8 neighbors for every cell, returns false if failed
+	public boolean playPD ()
+	{
+		for (int i = 0; i < dim; i++)
+		{
+			for (int j = 0; j < dim; j++)
+			{
+				// store self type
+				int typeSelf = bacGrid[i][j].type;
+				
+				// make Pair array of coords for opponents
+				Pair[] op = new Pair[NEIGHBORS];
+				op[0] = new Pair(i-1, j-1);
+				op[1] = new Pair(i-1, j);
+				op[2] = new Pair(i-1, j+1);
+				op[3] = new Pair(i, j-1);
+				op[4] = new Pair(i, j+1);
+				op[5] = new Pair(i+1, j-1);
+				op[6] = new Pair(i+1, j);
+				op[7] = new Pair(i+1, j+1);		
+				
+				for (int i = 0; i < NEIGHBORS; i++)
+				{
+					// remember coords
+					int x = op[i].x;
+					int y = op[i].y;
+					
+					// if not off the grid
+					if (x >= 0 && y >= 0 && x < dim && y < dim)
+					{
+						// stores opponent type
+						int typeOpponent = bacGrid[x][y].type;
+						
+						// play Prisoner's Dilemma
+						if (typeSelf == COOPERATOR && typeOpponent == COOPERATOR)
+						{
+							bacGrid[i][j].addPoint(payoff.reward);
+							bacGrid[x][y].addPoint(payoff.reward);
+						}
+						
+						if (typeSelf == COOPERATOR && typeOpponent == DEFECTOR)
+						{
+							bacGrid[i][j].addPoint(payoff.sucker);
+							bacGrid[x][y].addPoint(payoff.temptation);
+						}
+						
+						if (typeSelf == COOPERATOR && typeOpponent == COOPERATOR)
+						{
+							bacGrid[i][j].addPoint(payoff.reward);
+							bacGrid[x][y].addPoint(payoff.reward);
+						}
+						
+						if (typeSelf == DEFECTOR && typeOpponent == DEFECTOR)
+						{
+							bacGrid[i][j].addPoint(payoff.punishment);
+							bacGrid[x][y].addPoint(payoff.punishment);
+						}
+					}
+				}
+				
+			}
+		}
+		
+	}
+	
 }

@@ -8,16 +8,11 @@ public class Bacteria {
 	// keeps track of total points
 	public int points;
 	
-	// coordinates for Bacteria
-	public int x, y;
-	
 	// constructor for Bacteria
-	public Bacteria(int type, int x, int y)
+	public Bacteria(int type)
 	{
 		this.type = type;
 		this.points = 0;
-		this.x = x;
-		this.y = y;
 	}
 	
 	// updating points of bacteria
@@ -29,7 +24,6 @@ public class Bacteria {
 	public void minusPoints(int p)
 	{
 		this.points -= p;
-	}
-	
+	}	
 
 }
