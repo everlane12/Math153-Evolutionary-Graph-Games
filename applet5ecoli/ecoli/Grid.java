@@ -153,7 +153,7 @@ public class Grid {
 				
 				// make lower same type as upper and reset points
 				bacGrid[xL][yL].type = bacGrid[xH][yH].type;
-				bacGrid[xL][yL].points = 0;
+				bacGrid[xL][yL].points = 0.25 * bacGrid[xH][yH].points;
 			}
 			
 			return true;
