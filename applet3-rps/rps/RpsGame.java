@@ -10,18 +10,16 @@ public class RpsGame {
 	
 	// numbers 
 	public int size;
-	public int rockSize;
-	public int paperSize;
-	public int scissorsSize;
+	public int[] rpsSize = new int[3];
 	public int timesteps;
 	
 	// constructor
 	public RpsGame (int rocks, int papers, int scissors, int timesteps)
 	{
 		// set values
-		this.rockSize = rocks;
-		this.paperSize = papers;
-		this.scissorsSize = scissors;
+		this.rpsSize[0] = rocks;
+		this.rpsSize[1] = papers;
+		this.rpsSize[2] = scissors;
 		this.size = rocks + papers + scissors;
 		this.timesteps = timesteps;
 	}
@@ -29,12 +27,12 @@ public class RpsGame {
 	// random number comparison function
 	public int randCompare(double randNum)
 	{
-		if (randNum < ((double) rockSize/size))
+		if (randNum < ((double) rpsSize[0]/size))
 		{
 			return ROCK;
 		}
 		
-		else if (randNum < ((double) (rockSize + paperSize)/size))
+		else if (randNum < ((double) (rpsSize[0] + rpsSize[1])/size))
 		{
 			return PAPER;
 		}
@@ -46,7 +44,7 @@ public class RpsGame {
 	}
 	
 	// plays a round, returns integer for type that won or -1 if tie
-	public int play ()
+	public void play ()
 	{
 		// generates random numbers
 		Random generator = new Random();
@@ -58,24 +56,24 @@ public class RpsGame {
 		
 		if (type1 == type2)
 		{
-			return -1;
+			return;
 		}
 		
 		// type1 wins
 		else if ((type1 == ROCK && type2 == SCISSORS) || (type1 == PAPER && type2 == ROCK) || (type1 == SCISSORS && type2 == PAPER))
 		{
-			return type1;
+			rpsSize[type2] = rpsSize[type2] - 1;
+			size = size -1;
+			return;
 		}
 		
 		else
 		{
-			return type2;
+			size = size -1;
+			rpsSize[type1] = rpsSize[type1] - 1;
+			return;
 		}
 	}
 	
-	public boolean playGame()
-	{
-		
-	}
 
 }
