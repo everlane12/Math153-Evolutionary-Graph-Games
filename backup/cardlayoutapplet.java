@@ -114,3 +114,4 @@ public class ecoliApplet extends Applet implements ActionListener {
 	}
 
 }
+
