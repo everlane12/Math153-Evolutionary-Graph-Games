@@ -155,7 +155,7 @@ public class Grid {
 				bacGrid[xL][yL].type = bacGrid[xH][yH].type;
 				
 				// give the "babies" a fourth of the points of the parents
-				bacGrid[xL][yL].points = (int) 0.25 * bacGrid[xH][yH].points;
+				bacGrid[xL][yL].points = (int) ((1/4) * bacGrid[xH][yH].points);
 			}
 			
 			return true;
