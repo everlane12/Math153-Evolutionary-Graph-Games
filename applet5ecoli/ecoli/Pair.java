@@ -1,4 +1,4 @@
-package helpers;
+package ecoli;
 
 // stores a pair of integers along with the function to compare them
 public class Pair {

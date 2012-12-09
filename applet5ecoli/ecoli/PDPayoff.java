@@ -1,4 +1,4 @@
-package helpers;
+package ecoli;
 
 public class PDPayoff {
 	

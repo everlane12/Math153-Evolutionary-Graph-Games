@@ -1,5 +1,4 @@
 package ecoli;
-import helpers.*;
 import java.util.*;
 
 public class Grid {
@@ -41,6 +40,9 @@ public class Grid {
 		// create payoff matrix
 		payoff = new PDPayoff(reward, sucker, temptation, punishment);
 		
+		// initialize Grid
+		bacGrid = new Bacteria[dim][dim];
+		
 		// populate the initial bacGrid
 		for (int i = 0; i < dim; i ++)
 		{
@@ -50,11 +52,13 @@ public class Grid {
 				if (c == 0)
 				{
 					bacGrid[i][j] = new Bacteria(DEFECTOR);
+					//d -= 1;
 				}
 				
 				if (d == 0)
 				{
 					bacGrid[i][j] = new Bacteria(COOPERATOR);
+					//c -= 1;
 				}
 				
 				// create random generator
@@ -64,20 +68,19 @@ public class Grid {
 				double randomNum = generator.nextDouble();
 				
 				// sort randomNum using the c / (c+d) proportion
-				if (randomNum < ((double) c / (c + d)))
+				if (randomNum < (double)( c / (c + d)))
 				{
-					bacGrid[i][j] = new Bacteria(0);
+					bacGrid[i][j] = new Bacteria(COOPERATOR);
+					c -= 1;
 				}
 				
 				else
 				{
-					bacGrid[i][j]= new Bacteria(1);
+					bacGrid[i][j]= new Bacteria(DEFECTOR);
+					d -= 1;
 				}
-					
-				
 			}
 		}
-		
 	}
 	
 	// helper function to find lowest or highest n bacteria in Grid
