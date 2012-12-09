@@ -7,13 +7,24 @@ import java.applet.Applet;
 public class ecoliApplet extends Applet implements ActionListener {
 	
 	// constants
-	int DIMNUM = 0;
-	int CNUM = 1;
-	int REWARDNUM = 2;
-	int SUCKERNUM = 3;
-	int TEMPTATIONNUM = 4;
-	int PUNISHMENTNUM = 5;
-	int CONSTSNUM = 6;
+	public static final Dimension WINDOWDIM = new Dimension (800, 600);
+	
+	public static final int DIMNUM = 0;
+	public static final int CNUM = 1;
+	public static final int REWARDNUM = 2;
+	public static final int SUCKERNUM = 3;
+	public static final int TEMPTATIONNUM = 4;
+	public static final int PUNISHMENTNUM = 5;
+	public static final int CONSTSNUM = 6;
+	
+	public static final Color CCOLOR = new Color(69, 139, 0);
+	public static final Color DCOLOR = new Color(255, 69, 0);
+	public static final int GRIDSTARTY = 60;
+	public static final int GRIDSTARTX = 120;
+	public static final int GRIDOFFSETY = 20;
+	public static final int GRIDOFFSETX = 3;
+	public static final int GRIDINC = 32;
+	public static final int BACSIZE = 30;
 	
 	// dimensions of applet
 	public int width;
@@ -61,7 +72,7 @@ public class ecoliApplet extends Applet implements ActionListener {
 		this.height = getSize().height;
 		
 		// sets size of applet
-		size = new Dimension(800,500);
+		size = WINDOWDIM;
 		
 		setSize(size);
 		
@@ -145,15 +156,33 @@ public class ecoliApplet extends Applet implements ActionListener {
 					
 			// shows first page
 			gameStatus = 0;
-			nextButton.setEnabled(true);
+			
+			if ((gameNums[0] <= 15) || (gameNums[1] <= (gameNums[0] * gameNums[0])))
+			{
+				nextButton.setEnabled(true);
+			}
+			
 			repaint();
 		}
 		
 		if (event.getSource() == nextButton)
 		{
-			goButton.setEnabled(false);
-			gameStatus = 1;
-			gameEcoli();
+			if (gameStatus == 0)
+			{
+				goButton.setEnabled(false);
+				gameStatus = 1;
+				
+				// makes the game grid object
+				game = new Grid (gameNums[DIMNUM], gameNums[CNUM], gameNums[REWARDNUM], gameNums[SUCKERNUM],
+						gameNums[TEMPTATIONNUM], gameNums[PUNISHMENTNUM]);
+				repaint();
+			}
+			
+			else 
+			{
+				playGame();
+		
+			}
 		}
 	}
 
@@ -171,8 +200,8 @@ public class ecoliApplet extends Applet implements ActionListener {
 			g.drawString("E.coli on a grid simulation. [insert description]", 200, 100);
 			g.drawString("Please enter inputs below and press Go.", 200, 140);
 			
-			String[] descriptStr = {"Dim = dimesion of the grid",
-				"C Num = number of cooperators",
+			String[] descriptStr = {"Dim = dimesion of the grid (max 15)",
+				"C Num = number of cooperators (max Dim * Dim)",
 				"R = reward of payoff matrix",
 				"S = sucker of payoff matrix",
 				"T = temptation of payoff matrix",
@@ -202,35 +231,57 @@ public class ecoliApplet extends Applet implements ActionListener {
 			for (int i = 0; i < CONSTSNUM; i++)
 			{
 				nameStr[i] += Integer.toString(gameNums[i]);
+				nameStr[0] += " (must be < 15)";
+				
+				//String dimdim = Integer.toString(gameNums[0] * gameNums[0]);
+				//nameStr[1] += " (must be < ";
+				//nameStr[1] += dimdim;
+				//nameStr[1] += ")";
 				g.drawString(nameStr[i], 200, 100 + (20 * i));
 			}
 			
-			g.drawString("Re-enter values or", 200, 260);
+			g.drawString("Re-enter values and press Go or", 200, 260);
 			g.drawString("Press Next to start the simulation", 200, 280);
+			g.drawString("(If the Next button is not enabled, entered baaad numbers)", 200, 320);
 		}
 		
 		// draws game grid
 		if (gameStatus == 1)
 		{
-			g.drawString(Integer.toString(game.dNum), 20, 60);
+			//g.drawString( Double.toString((double)( game.cNum / (game.cNum + game.dNum))), 20, 60);
 			for (int i = 0; i < game.dim; i++)
 			{
 				for (int j = 0; j < game.dim; j++)
 				{
-					g.drawString(Integer.toString(game.bacGrid[i][j].type), 20 + (10 * j), 80 + (20 * i));
+					if (game.bacGrid[i][j].type == 0)
+					{
+						g.setColor(CCOLOR);
+						g.fillOval(GRIDSTARTX + (GRIDINC * j), GRIDSTARTY + (GRIDINC * i), BACSIZE, BACSIZE);
+						g.setColor(Color.darkGray);
+						g.drawString(Integer.toString(game.bacGrid[i][j].points), 
+								GRIDSTARTX + GRIDOFFSETX + (GRIDINC * j), GRIDSTARTY + GRIDOFFSETY + (GRIDINC * i));
+					}
+					
+					else
+					{
+						g.setColor(DCOLOR);
+						g.fillOval(GRIDSTARTX + (GRIDINC * j), GRIDSTARTY + (GRIDINC * i), BACSIZE, BACSIZE);
+						g.setColor(Color.darkGray);
+						g.drawString(Integer.toString(game.bacGrid[i][j].points), GRIDSTARTX + GRIDOFFSETX + (GRIDINC * j), 
+								GRIDSTARTY + GRIDOFFSETY + (GRIDINC * i));
+					}
+					
+					
+					//g.drawString(Integer.toString(game.bacGrid[i][j].type), 20 + (10 * j), 80 + (20 * i));
 				}
 			}
 		}
 	}
 	// run an e.coli game
-	public void gameEcoli ()
+	public void playGame()
 	{
-		// makes the game grid object
-		game = new Grid (gameNums[DIMNUM], gameNums[CNUM], gameNums[REWARDNUM], gameNums[SUCKERNUM],
-				gameNums[TEMPTATIONNUM], gameNums[PUNISHMENTNUM]);
-		
+		game.playPD();
 		repaint();
-		
 	}
 
 }

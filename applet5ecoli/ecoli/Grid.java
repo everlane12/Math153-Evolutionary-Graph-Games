@@ -36,6 +36,7 @@ public class Grid {
 		// keep track of cooperators and defectors created
 		int c = cNum;
 		int d = dNum;
+		double t = (double) cNum + dNum; 
 		
 		// create payoff matrix
 		payoff = new PDPayoff(reward, sucker, temptation, punishment);
@@ -47,28 +48,28 @@ public class Grid {
 		for (int i = 0; i < dim; i ++)
 		{
 			for (int j = 0; j < dim; j++)
-			{
-				// if no more cooperators or defectors to be created, create the other kind
-				if (c == 0)
-				{
-					bacGrid[i][j] = new Bacteria(DEFECTOR);
-					//d -= 1;
-				}
-				
-				if (d == 0)
-				{
-					bacGrid[i][j] = new Bacteria(COOPERATOR);
-					//c -= 1;
-				}
-				
+			{				
 				// create random generator
 				Random generator = new Random();
 				
 				// generate random number between 0 and 1
 				double randomNum = generator.nextDouble();
 				
+				// if no more cooperators or defectors to be created, create the other kind
+				if (c == 0)
+				{
+					bacGrid[i][j] = new Bacteria(DEFECTOR);
+					d -= 1;
+				}
+				
+				else if (d == 0)
+				{
+					bacGrid[i][j] = new Bacteria(COOPERATOR);
+					c -= 1;
+				}
+				
 				// sort randomNum using the c / (c+d) proportion
-				if (randomNum < (double)( c / (c + d)))
+				else if (randomNum < (double)( cNum / t))
 				{
 					bacGrid[i][j] = new Bacteria(COOPERATOR);
 					c -= 1;
@@ -171,7 +172,7 @@ public class Grid {
 	}
 
 	// plays prisoner's dilemmma with each of the 8 neighbors for every cell, returns false if failed
-	public boolean playPD ()
+	public void playPD ()
 	{
 		for (int i = 0; i < dim; i++)
 		{
@@ -227,7 +228,6 @@ public class Grid {
 							if (typeSelf == DEFECTOR && typeOpponent == DEFECTOR)
 							{
 								// something didn't work out right
-								return false;
 							}
 							
 							bacGrid[i][j].addPoint(payoff.punishment);
@@ -235,11 +235,26 @@ public class Grid {
 						}
 					}
 				}
-				
 			}
 		}
-		
-		return true;
 	}
 	
+	// print function for debugging 
+	public void printPoints()
+	{
+		for (int i = 0; i < dim; i++)
+		{
+			for (int j = 0; j < dim; j++)
+			{
+				String coord = "(";
+				coord += Integer.toString(i);
+				coord += ",";
+				coord += Integer.toString(j);
+				coord += "): ";
+				coord += Integer.toString(bacGrid[i][j].points);
+				
+				System.out.println(coord);
+			}
+		}	
+	}
 }

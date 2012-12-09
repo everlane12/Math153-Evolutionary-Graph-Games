@@ -6,12 +6,13 @@ public class Test {
 	public static void main(String[] args)
 	{
 		
+		/*
 		Bacteria[] bac = new Bacteria[5];
 		int c = 4;
 		int d = 1;
 		
-		//for (int i = 0; i < 5; i++)
-		//{
+		for (int i = 0; i < 5; i++)
+		{
 			for (int j = 0; j < 5; j++)
 			{
 				Random generator = new Random();
@@ -48,11 +49,12 @@ public class Test {
 				}
 		
 			}
-		//}
+		}*/
 		
-		/*
-		Grid game = new Grid(4, 10, 0, 0, 0, 0);
-		System.out.println(game.dim); */
+		Grid testGame = new Grid(2, 4, 5, 0, 0, 0);
+		testGame.printPoints();
+		testGame.playPD();
+		testGame.printPoints();
 	}
 
 }
