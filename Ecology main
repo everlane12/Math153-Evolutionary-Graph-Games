@@ -1,0 +1,29 @@
+import java.util.Scanner;
+
+public class Ecology_main{
+  public static void main(String[] args){
+	int no_species;
+	int no_resources;
+
+	//user input of values
+	Scanner user_input=new Scanner(System.in);
+		
+	//need to figure out how to create number of
+	//new objects based on a variable input
+	System.out.println("Enter the number of species");
+	no_species=user_input.nextInt();
+		                   
+	Ecology_game_1 game1= new Ecology_game_1(no_species);	
+	
+	
+	game1.first_iteration();
+	//game1.test();
+	game1.showrank();
+		
+		
+	}
+
+
+
+
+}
