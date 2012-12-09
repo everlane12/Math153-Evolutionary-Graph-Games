@@ -6,6 +6,15 @@ import java.applet.Applet;
 
 public class ecoliApplet extends Applet implements ActionListener {
 	
+	// constants
+	int DIMNUM = 0;
+	int CNUM = 1;
+	int REWARDNUM = 2;
+	int SUCKERNUM = 3;
+	int TEMPTATIONNUM = 4;
+	int PUNISHMENTNUM = 5;
+	int CONSTSNUM = 6;
+	
 	// dimensions of applet
 	public int width;
 	public int height;
@@ -24,17 +33,19 @@ public class ecoliApplet extends Applet implements ActionListener {
 	TextField punishmentInput;
 	
 	// button for submit inputs
-	Button submitButton;
+	Button goButton;
+	Button nextButton;
 	
 	// constants for game
-	boolean gameOn = false;
+	int gameStatus = -1;
 	
-	int dimNum = 0;
-	int cNum = 0;
-	int rewardNum = 0;
-	int suckerNum = 0;
-	int temptationNum = 0;
-	int punishmentNum = 0;
+	int[] gameNums = {0, 0, 0, 0, 0, 0};	
+	
+	// grid game
+	Grid game;
+	
+	// info for paint
+	Font titleFont = new Font("Arial", Font.PLAIN, 15);
 	 
 	public void init()
 	{
@@ -43,7 +54,7 @@ public class ecoliApplet extends Applet implements ActionListener {
 		this.height = getSize().height;
 		
 		// sets size of applet
-		size = new Dimension(500,300);
+		size = new Dimension(500,500);
 		
 		setSize(size);
 		
@@ -66,24 +77,27 @@ public class ecoliApplet extends Applet implements ActionListener {
 		punishmentInput = new TextField(5);
 		punishmentInput.setText("0");
 		
-		submitButton = new Button("Go");
-		submitButton.addActionListener(this);
+		goButton = new Button("Go");
+		goButton.addActionListener(this);
+		nextButton = new Button("Next");
+		nextButton.addActionListener(this);
+		nextButton.setEnabled(false);
 		
 		// creates the input panel (Flow style) and add fields
 		inputPanel = new Panel();
-		
 		inputPanel.add(dimInput);
 		inputPanel.add(cNumInput);
 		inputPanel.add(rewardInput);
 		inputPanel.add(suckerInput);
 		inputPanel.add(temptationInput);
 		inputPanel.add(punishmentInput);
-		inputPanel.add(submitButton);
+		inputPanel.add(goButton);
+		inputPanel.add(nextButton);
+		
 		
 		// overall layout is Border style, add main and roadmap
 		this.setLayout(new BorderLayout());
 		this.add(inputPanel, BorderLayout.SOUTH);
-		
 		// set background
 		setBackground(Color.white);
 		
@@ -93,7 +107,7 @@ public class ecoliApplet extends Applet implements ActionListener {
 	public void actionPerformed(ActionEvent event)
 	{
 		// actions for roadmap buttons
-		if (event.getSource() == submitButton)
+		if (event.getSource() == goButton)
 		{
 			String dimS = dimInput.getText();
 			String cNumS = cNumInput.getText();
@@ -102,35 +116,102 @@ public class ecoliApplet extends Applet implements ActionListener {
 			String temptationS = temptationInput.getText();
 			String punishmentS = punishmentInput.getText();
 			
-			dimNum = Integer.parseInt(dimS);
-			cNum = Integer.parseInt(cNumS);
-			rewardNum = Integer.parseInt(rewardS);
-			suckerNum = Integer.parseInt(suckerS);
-			temptationNum = Integer.parseInt(temptationS);
-			punishmentNum = Integer.parseInt(punishmentS);
+			String[] submitStr = {dimS, cNumS, rewardS, suckerS, temptationS, punishmentS};
 			
-			gameOn = true;
+			for (int i = 0; i < CONSTSNUM; i++ )
+			{
+				gameNums[i] = Integer.parseInt(submitStr[i]); 
+			}
+					
+			// shows first page
+			gameStatus = 0;
+			nextButton.setEnabled(true);
 			repaint();
+		}
+		
+		if (event.getSource() == nextButton)
+		{
+			goButton.setEnabled(false);
+			gameStatus = 1;
+			gameEcoli();
 		}
 	}
 
 	// paint function
 	public void paint (Graphics g)
 	{
-		Graphics2D g2 = (Graphics2D) g;
-		if (!gameOn)
+		// draw title of applet
+		g.setFont (titleFont);
+		g.setColor(Color.darkGray);
+		g.drawString("Evolutionary Games: E. coli on a grid", 100, 20);
+		
+		// draws the input labels
+		String[] labelStr = {"Dim", "BD", "R", "S", "T", "P"};
+		g.setColor(Color.darkGray);
+		for (int i = 0; i < CONSTSNUM; i++)
 		{
-			Font f = new Font("Monospaced", Font.BOLD, 20);
-			g2.setFont (f);
-			g2.setColor(Color.black);
-			g2.drawString("Evolutionary Games on Graphs with Examples", 20, 20);
-	
+			g.drawString(labelStr[i], 50 + (55 * i), 450);
 		}
+		
+		if (gameStatus == -1)
+		{
+			// prints instructions
+			g.drawString("E.coli on a grid simulation. [insert description]", 100, 100);
+			g.drawString("Please enter inputs below and press Go.", 100, 120);
+			
+			String[] descriptStr = {"Dim = dimesion of the grid",
+				"BD = birth/death number",
+				"R = reward of payoff matrix",
+				"S = sucker of payoff matrix",
+				"T = temptation of payoff matrix",
+				"P = punishment of payoff matrix"};
+			
+			g.setColor(Color.darkGray);
+			for (int i = 0; i < CONSTSNUM; i++)
+			{
+				g.drawString(descriptStr[i], 100, 140 + (20 * i));
+			}
+		}
+		
+		// draw input values
+		if (gameStatus == 0)
+		{
+			g.setColor(Color.darkGray);
+			
+			// display inputs
+			String dimStr = "dimension: ";
+			String cNumStr = "birth-death number: ";
+			String rewardStr = "reward: ";
+			String suckerStr = "sucker: ";
+			String temptationStr = "temptation: ";
+			String punishmentStr = "punishment: ";
+			String[] nameStr = {dimStr, cNumStr, rewardStr, suckerStr, temptationStr, punishmentStr};
+			
+			for (int i = 0; i < CONSTSNUM; i++)
+			{
+				nameStr[i] += Integer.toString(gameNums[i]);
+				g.drawString(nameStr[i], 120, 100 + (20 * i));
+			}
+			
+			g.drawString("Re-enter values or", 120, 260);
+			g.drawString("Press Next to start the simulation", 120, 280);
+		}
+		
+		// draws game grid
+		/*if (gameStatus == 1)
+		{
+			game.
+		}*/
 	}
 	// run an e.coli game
-	/*public void gameEcoli ()
+	public void gameEcoli ()
 	{
-		Grid game = new Grid()
-	}*/
+		// makes the game grid object
+		game = new Grid (gameNums[DIMNUM], gameNums[CNUM], gameNums[REWARDNUM], gameNums[SUCKERNUM],
+				gameNums[TEMPTATIONNUM], gameNums[PUNISHMENTNUM]);
+		
+		repaint();
+		
+	}
 
 }

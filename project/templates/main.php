@@ -1,5 +1,5 @@
 
 <div>
-    <applet width=300 height=300 codebase="/home/jharvard/math153/applet5ecoli/ecoli"
-    	code="ecoliApplet.class"></applet>
+    <applet codebase = "applet5ecoli" code=ecoli.ecoliApplet.class width=500 height=300></applet>
 </div>
+
