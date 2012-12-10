@@ -1,4 +1,6 @@
-import java.util.Random;
+package ecology;
+
+import java.util.*;
 
 public class Ecology_game_1{
 
@@ -8,17 +10,20 @@ public class Ecology_game_1{
 	//command as well that will allow the old graphic to be displayed before
 	//the new one comes up
 	public int no_species; 
-	public int no_rounds;
+	//public int no_rounds;
 	public int[] species_rank;
 	public int[] graphics_matrix;
+	public int[] extinct_species;
+	public int extinct_counter=0;
 	//creates random numbers for ordering
 	Random generator= new Random();
 		
-	public Ecology_game_1 (int number, int rounds){
+	public Ecology_game_1 (int number){
 		no_species=number;
-		no_rounds=rounds;
+		//no_rounds=rounds;
 		species_rank=new int[number]; 
 		graphics_matrix=new int[number];
+		extinct_species=new int[100];
 	}
 	
 	
@@ -59,7 +64,7 @@ public class Ecology_game_1{
 	        	//each one fights once
 	        	for(int first=0; first<no_species;first++){
 	        		for(int second=first+1;second<no_species;second++){
-	        			if(((prob=generator.nextDouble())<((double)rankings[first]/(rankings[first]+rankings[second])))){
+	        			if(((generator.nextDouble())<((double)rankings[first]/(rankings[first]+rankings[second])))){
 	        				fight[first][second]=first;
 	        				winner[first]=winner[first]+1;
 	        			
@@ -82,24 +87,33 @@ public class Ecology_game_1{
 	        	}
 	  
 	       	
-	        	for(int copy=0;copy<no_species;copy++)
-	        		graphics[copy]=rankings[copy];
+	        	for(int copy=0;copy<no_species;copy++){
+	        		graphics[copy]=copy+1;
+	        		//System.out.println(graphics[copy]);
+	        	}
+	        	
 	       	
 	        	//this section is different for the different games
 	        	for(int first=0; first<no_species;first++){
 	        		if(winner[first]==0){
-	        			System.out.println(first+" died");
+	        			//System.out.println(first+" died");
 	        			deathcount++;
 	        			//dead replaced with individual with most wins
 	        			rankings[first]=rankings[highest];
-	        			graphics[first]=highest;
+	        			extinct_counter++;
+	        			extinct_species[extinct_counter]=first;
+	        			graphics[first]=highest+1;
 	        		}	
-	        			System.out.println("winner["+first+"]="+winner[first]);
+	        			//System.out.println("winner["+first+"]="+winner[first]);
+        			//System.out.println(graphics[first]);
+
+	        	
 	        	}
 		
 	        	
 	        	//copies graphic matrix!
 	        	for(int copy=0;copy<no_species;copy++){
+	        		//System.out.println(graphics[copy]);
 	        		graphics_matrix[copy]=graphics[copy];
 	        		species_rank[copy]=rankings[copy];
 	        	}
@@ -123,7 +137,8 @@ public class Ecology_game_1{
 		return deathcount;
 		
 	}
-	
+	//Zombies come from here! I change the value of its fitness
+	//but the number still stays the same even after the change
 	public int next_run(){
 		int highest=0, deathcount=0;
 		int[] rankings= new int[no_species];
@@ -161,21 +176,30 @@ public class Ecology_game_1{
 	  
 	      	
 	       	for(int copy=0;copy<no_species;copy++)
-	       		graphics[copy]=rankings[copy];
+	       		graphics[copy]=graphics_matrix[copy];
 	       	
 	       	//this section is different for the different games
         	for(int first=0; first<no_species;first++){
         		if(winner[first]==0){
-	        		System.out.println(first+" died");
+	        		//System.out.println(first+" died");
 	       			deathcount++;
 	       			//dead replaced with individual with most wins
 	       			rankings[first]=rankings[highest];
-	       			graphics[first]=highest;
+	       			extinct_counter++;
+        			extinct_species[extinct_counter]=first;
+	       			//graphics[first]=highest+1;
 	       		}	
-	       			System.out.println("winner["+first+"]="+winner[first]);
+	       			//System.out.println("winner["+first+"]="+winner[first]);
 	       	}
 		
-	        	
+	        	for(int step1=0;step1<no_species;step1++){
+	        		for(int step2=0;step2<no_species;step2++){
+	        			if(graphics[step1]==extinct_species[step2])
+	        				graphics[step1]=highest+1;
+	        			
+	        		}
+	        		
+	        	}
 	       	//copies graphic matrix!
         	for(int copy=0;copy<no_species;copy++){
         		graphics_matrix[copy]=graphics[copy];
@@ -196,6 +220,7 @@ public class Ecology_game_1{
 	
 	}
 	
+
 
 
 
