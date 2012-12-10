@@ -246,9 +246,9 @@ public class ecoliApplet extends Applet implements ActionListener {
 			g.drawString("Play this simulation to see the dynamics of E. coli bacteria playing Prisoner's Dilemma", 100, 100);
 			g.drawString("on a spatial grid. In this simulation, always cooperating and always defecting E. coli", 100, 120);
 			g.drawString("play Prisoner's Dilemma (PD) with neighboring fellow E. coli bacteria. Every round, each", 100, 140);
-			g.drawString("bacteria plays PD with all 8 of its neighbors and receives points accordingly. Every x", 100, 160);
-			g.drawString("round, the lowest 40% E. coli in terms of points dies while the highest 40% reproduces", 100, 180);
-			g.drawString("randomly into a vacant spot. The new \"baby\" E. coli are given 25% of the parental points", 100, 200);
+			g.drawString("bacteria plays PD with all 8 of its neighbors and receives points accordingly. Every set", 100, 160);
+			g.drawString("number of timesteps, the Birth-Death updating is performed for the top fourth of the", 100, 180);
+			g.drawString("population in order. The new \"baby\" E. coli are given 25% of the parental points", 100, 200);
 			g.drawString("(parent loses 25%). Define a square grid with up to 15x15 dimensions, the number of ", 100, 220);
 			g.drawString("cooperating E. coli (we'll calculate the rest as defecting E. coli), as well as the", 100, 240);
 			g.drawString("Prisoner's Dilemma payoff matrix and the timestep interval for the birth-death process", 100, 260);
@@ -360,23 +360,30 @@ public class ecoliApplet extends Applet implements ActionListener {
 				}
 			}
 			
+			g.setColor(Color.darkGray);
+			g.drawString("Press Next for the", INFOSTARTX, INFOSTARTY + 40);
+			g.drawString("next timestep or for", INFOSTARTX, INFOSTARTY + 60);
+			g.drawString("a new game, change", INFOSTARTX, INFOSTARTY + 80);
+			g.drawString("inputs (if needed)", INFOSTARTX, INFOSTARTY + 100);
+			g.drawString("and press Go", INFOSTARTX, INFOSTARTY + 120);
+			
 			g.setColor(CCOLOR);
 			g.fillOval(INFOSTARTX, INFOSTARTY + 400, BACSIZE, BACSIZE);
 			g.setColor(Color.darkGray);
-			g.drawString("Cooperator", INFOSTARTX + BACSIZE + 10, INFOSTARTY + 420);
+			g.drawString("Cooperator (" + Integer.toString(game.cNum) + ")", INFOSTARTX + BACSIZE + 10, INFOSTARTY + 420);
 			g.setColor(DCOLOR);
 			g.fillOval(INFOSTARTX, INFOSTARTY + 430, BACSIZE, BACSIZE);
 			g.setColor(Color.darkGray);
-			g.drawString("Defector", INFOSTARTX + BACSIZE + 10, INFOSTARTY + 450);
+			g.drawString("Defector (" + Integer.toString(game.dNum) + ")", INFOSTARTX + BACSIZE + 10, INFOSTARTY + 450);
 		}
 		
 		if (gameRepped)
 		{
 			g.setColor(CCOLOR);
-			g.drawString("Birth-death renewal", INFOSTARTX, INFOSTARTY + 40);
-			g.drawString("just occurred!", INFOSTARTX, INFOSTARTY + 60);
+			g.drawString("Birth-death renewal", INFOSTARTX, INFOSTARTY + 140);
+			g.drawString("just occurred!", INFOSTARTX, INFOSTARTY + 160);
 			g.drawString( "(" + Integer.toString(game.repNum) + " died, " + Integer.toString(game.repNum) + " born)", 
-					INFOSTARTX, INFOSTARTY + 80);
+					INFOSTARTX, INFOSTARTY + 180);
 		}
 	}
 }

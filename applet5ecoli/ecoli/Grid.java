@@ -37,7 +37,7 @@ public class Grid {
 		this.dNum = (dim * dim) - cNum;
 		
 		// sets replication numbers
-		this.repNum = (int) (0.4 * (cNum + dNum)); 
+		this.repNum = (int) (0.25 * (cNum + dNum)); 
 		
 		// keep track of cooperators and defectors created
 		int c = cNum;
@@ -179,20 +179,315 @@ public class Grid {
 		// the lowest bac is replaced by the highest bac in order
 	
 		// find the lowest and highest bacteria
-		Pair[] lowestN = lowHighN(true);
+		// Pair[] lowestN = lowHighN(true);
 		Pair[] highestN = lowHighN(false);
 		
 		// lowest one in lowest array replaced by lowest one in highest array
 		for (int i = 0; i < repNum; i++)
 		{
 			// extract coords
-			int xL = lowestN[i].x;
-			int yL = lowestN[i].y;
+			// int xL = lowestN[i].x;
+			// int yL = lowestN[i].y;
 			int xH = highestN[i].x;
 			int yH = highestN[i].y;
 			
+			Random generator = new Random();
+			int neighbor;
+			int self;
+			
+			// separate blocks into cases
+			
+			// corners
+			if ((xH == 0) && (yH == 0))
+			{
+				self = 0;
+			}
+			
+			else if((xH == 0) && (yH == dim - 1))
+			{
+				self = 1;
+			}
+			
+			else if ((xH == dim - 1) && (yH == 0))
+			{
+				self = 2;
+			}
+			
+			else if ((xH == dim - 1) && (yH == 0))
+			{
+				self = 3;
+			}
+			
+			// sides
+			else if (xH == 0)
+			{
+				self = 5;
+			}
+			
+			else if (yH == 0)
+			{
+				self = 4;
+			}
+			
+			else if (xH == dim -1)
+			{
+				self = 6;
+			}
+			
+			else if (yH == dim - 1)
+			{
+				self = 7;
+			}
+			
+			// center		
+			else
+			{
+				self = 8;
+			}
+			
+			if (self == 0 || self == 1 || self == 2 || self == 3)
+			{
+				neighbor = generator.nextInt(3);
+				if (self == 0)
+				{
+					if (neighbor == 0)
+					{
+						neighbor = 4;
+					}
+					else if (neighbor == 1)
+					{
+						neighbor = 6;
+					}
+					else
+					{
+						neighbor = 7;
+					}
+				}
+				
+				else if (self == 1)
+				{
+					if (neighbor == 0)
+					{
+						neighbor = 1;
+					}
+					else if (neighbor == 1)
+					{
+						neighbor = 2;
+					}
+					else
+					{
+						neighbor = 4;
+					}
+				}
+				
+				else if (self == 2)
+				{
+					if (neighbor == 0)
+					{
+						neighbor = 3;
+					}
+					else if (neighbor == 1)
+					{
+						neighbor = 5;
+					}
+					else
+					{
+						neighbor = 6;
+					}
+				}
+				
+				else
+				{
+					if (neighbor == 0)
+					{
+						neighbor = 0;
+					}
+					else if (neighbor == 1)
+					{
+						neighbor = 1;
+					}
+					else
+					{
+						neighbor = 3;
+					}
+				}
+			}
+			
+			else if (self == 8)
+			{
+				neighbor = generator.nextInt(8);
+			}
+			
+			else
+			{
+				neighbor = generator.nextInt(5);
+				
+				if (self == 4)
+				{
+					if (neighbor == 0)
+					{
+						neighbor = 3;
+					}
+					else if (neighbor == 1)
+					{
+						neighbor = 4;
+					}
+					else if (neighbor == 2)
+					{
+						neighbor = 5;
+					}
+					else if (neighbor == 3)
+					{
+						neighbor = 6;
+					}
+					else
+					{
+						neighbor = 7;
+					}
+				}
+				
+				else if (self == 5)
+				{
+					if (neighbor == 0)
+					{
+						neighbor = 1;
+					}
+					else if (neighbor == 1)
+					{
+						neighbor = 2;
+					}
+					else if (neighbor == 2)
+					{
+						neighbor = 4;
+					}
+					else if (neighbor == 3)
+					{
+						neighbor = 6;
+					}
+					else
+					{
+						neighbor = 7;
+					}
+				}
+				
+				if (self == 6)
+				{
+					if (neighbor == 0)
+					{
+						neighbor = 0;
+					}
+					else if (neighbor == 1)
+					{
+						neighbor = 1;
+					}
+					else if (neighbor == 2)
+					{
+						neighbor = 3;
+					}
+					else if (neighbor == 3)
+					{
+						neighbor = 5;
+					}
+					else
+					{
+						neighbor = 6;
+					}
+				}
+				
+				else
+				{
+					if (neighbor == 0)
+					{
+						neighbor = 0;
+					}
+					else if (neighbor == 1)
+					{
+						neighbor = 1;
+					}
+					else if (neighbor == 2)
+					{
+						neighbor = 2;
+					}
+					else if (neighbor == 3)
+					{
+						neighbor = 3;
+					}
+					else
+					{
+						neighbor = 4;
+					}
+				}
+			}
+			
+			int xL;
+			int yL;
+			
+			if (neighbor == 0)
+			{
+				xL = xH - 1;
+				yL = yH - 1;
+			}
+			
+			else if (neighbor == 1)
+			{
+				xL = xH;
+				yL = yH - 1;
+			}
+			
+			else if (neighbor == 2)
+			{
+				xL = xH + 1;
+				yL = yH - 1;
+			}
+			
+			else if (neighbor == 3)
+			{
+				xL = xH - 1;
+				yL = yH;
+			}
+			
+			else if (neighbor == 4)
+			{
+				xL = xH + 1;
+				yL = yH;
+			}
+			
+			else if (neighbor == 5)
+			{
+				xL = xH - 1;
+				yL = yH + 1;
+			}
+			
+			else if (neighbor == 6)
+			{
+				xL = xH;
+				yL = yH + 1;
+			}
+			
+			else 
+			{
+				xL = xH + 1;
+				yL = yH + 1;
+			}
+			
 			// make lower same type as upper and reset points
+			int typeNew = bacGrid[xH][yH].type;
+			int typeOld = bacGrid[xL][yL].type;
+			
 			bacGrid[xL][yL].type = bacGrid[xH][yH].type;
+			
+			
+			if ((typeNew == 0) && (typeOld == 1))
+			{
+				cNum += 1;
+				dNum -= 1;
+			}
+			
+			if ((typeNew == 1) && (typeOld == 0))
+			{
+				dNum += 1;
+				cNum -= 1;
+			}
 			
 			// give the "babies" a fourth of the points of the parents
 			//bacGrid[xL][yL].points = 0;
