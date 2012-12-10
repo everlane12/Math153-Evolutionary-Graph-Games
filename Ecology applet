@@ -5,11 +5,11 @@ import java.applet.Applet;
 
 public class DrawingEcology extends Applet implements ActionListener{
 
-  //GUI elements
-	Textfield Species_input=new Textfield(5);
-	Textfield Round_input=new Textfield(5);
-	Textfield Death_input=new Textfield(5);
-	Textfield Resource_input=new Textfield(5);
+	//GUI elements
+	TextField Species_input=new TextField(5);
+	TextField Round_input=new TextField(5);
+	TextField Death_input=new TextField(5);
+	TextField Resource_input=new TextField(5);
 	
 	Button goButton=new Button("Go");	
 	
@@ -25,6 +25,8 @@ public class DrawingEcology extends Applet implements ActionListener{
 	
 	
 	public void actionPerformed (ActionEvent e){
+		String cmd = e.getActionCommand();
+		
 		//deals with the action
 		//reads the numbers inputted
 		
@@ -87,7 +89,7 @@ public class DrawingEcology extends Applet implements ActionListener{
 		//Set up how many number of games based on resources
 		Ecology_game_1[] game1=new Ecology_game_1[Round_num];
 	
-		for(int setup=0;setup<no_rounds;setup++)
+		for(int setup=0;setup<Round_num;setup++)
 			game1[setup]=new Ecology_game_1(Species_num,Round_num);
 		
 		//runs games. Not on a time delay though... Will only then 
@@ -97,7 +99,7 @@ public class DrawingEcology extends Applet implements ActionListener{
 			game1[howmany].first_run();
 			
 			for(int remainder=1; remainder<Resource_num;remainder++)
-				game1[howmany].next_run(Species_num,Round_num);
+				game1[howmany].next_run();
 			
 		}
 		
@@ -107,11 +109,29 @@ public class DrawingEcology extends Applet implements ActionListener{
 	
 	public void paint(Graphics g) {
 		
+		//Set up how many number of games based on resources
+		Ecology_game_1[] game1=new Ecology_game_1[Round_num];
+	
+		for(int setup=0;setup<Round_num;setup++)
+			game1[setup]=new Ecology_game_1(Species_num,Round_num);
+		
+		//runs games. Not on a time delay though... Will only then 
+		//output the final game. Can change later
+		for(int howmany=0; howmany<Species_num;howmany++){
+			
+			game1[howmany].first_run();
+			
+			for(int remainder=1; remainder<Resource_num;remainder++)
+				game1[howmany].next_run();
+			
+		}
+		
+		
 		int display=0,x=20,y=20;
 		
 		for(int no_species=0;no_species<Species_num;no_species++){
 			
-			 for(in no_species2=0;no_species2<Species_num;
+			 for(int no_species2=0;no_species2<Species_num;
 			 	 				no_species2++)
 			//transfers over the data
 			display=game1[no_species].graphics_matrix[no_species2];
