@@ -39,5 +39,12 @@ public class Pair {
 			return false;
 		}
 	}
+	
+	// print function for debugging
+	public void print()
+	{
+		String printPair = "(" + Integer.toString(x) + "," + Integer.toString(y) + ")";	
+		System.out.println(printPair);
+	}
 
 }

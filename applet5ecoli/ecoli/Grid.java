@@ -20,6 +20,9 @@ public class Grid {
 	// number of bacteria replaced each round
 	public int repNum;
 	
+	// timesteps before 
+	public int timesteps = 0;
+	
 	// prisoner's dilemma payoff
 	public PDPayoff payoff;
 	
@@ -32,6 +35,9 @@ public class Grid {
 		this.dim = dim;
 		this.cNum = cNum;
 		this.dNum = (dim * dim) - cNum;
+		
+		// sets replication numbers
+		this.repNum = (int) (0.4 * (cNum + dNum)); 
 		
 		// keep track of cooperators and defectors created
 		int c = cNum;
@@ -106,6 +112,7 @@ public class Grid {
 				{
 					bacPoints[counter] = bacGrid[i][j].points;
 					bacCoords[counter] = new Pair(i, j);
+					counter += 1;
 				}
 				
 				// update array with other points if needed
@@ -131,49 +138,36 @@ public class Grid {
 	}
 	
 	// updates bacGrid with death and reproduction, returns false if bacGrid too small
-	public boolean dieGrow ()
+	public void dieGrow ()
 	{
 		// the lowest bac is replaced by the highest bac in order
-		if (repNum < (dim * dim))
-		{
-			// find the lowest and highest bacteria
-			Pair[] lowestN = lowHighN(true);
-			Pair[] highestN = lowHighN(false);
-			
-			// check that lowestN and highestN have same length
-			if (lowestN.length != highestN.length)
-			{
-				return false;
-			}
-			
-			// lowest one in lowest array replaced by lowest one in highest array
-			for (int i = 0; i < lowestN.length; i++)
-			{
-				// extract coords
-				int xL = lowestN[i].x;
-				int yL = lowestN[i].y;
-				int xH = highestN[i].x;
-				int yH = highestN[i].y;
-				
-				// make lower same type as upper and reset points
-				bacGrid[xL][yL].type = bacGrid[xH][yH].type;
-				
-				// give the "babies" a fourth of the points of the parents
-				bacGrid[xL][yL].points = (int) ((1/4) * bacGrid[xH][yH].points);
-			}
-			
-			return true;
-		}
+	
+		// find the lowest and highest bacteria
+		Pair[] lowestN = lowHighN(true);
+		Pair[] highestN = lowHighN(false);
 		
-		else
+		// lowest one in lowest array replaced by lowest one in highest array
+		for (int i = 0; i < repNum; i++)
 		{
-			return false;
+			// extract coords
+			int xL = lowestN[i].x;
+			int yL = lowestN[i].y;
+			int xH = highestN[i].x;
+			int yH = highestN[i].y;
+			
+			// make lower same type as upper and reset points
+			bacGrid[xL][yL].type = bacGrid[xH][yH].type;
+			
+			// give the "babies" a fourth of the points of the parents
+			bacGrid[xL][yL].points = 0;
+			//bacGrid[xL][yL].points = (int) ((1/4) * bacGrid[xH][yH].points);
 		}
 	}
 
 	// plays prisoner's dilemmma with each of the 8 neighbors for every cell, returns false if failed
 	public void playPD ()
 	{
+		timesteps += 1;
 		for (int i = 0; i < dim; i++)
 		{
 			for (int j = 0; j < dim; j++)
@@ -257,4 +251,23 @@ public class Grid {
 			}
 		}	
 	}
+	
+	// print type function for debugging 
+		public void printType()
+		{
+			for (int i = 0; i < dim; i++)
+			{
+				for (int j = 0; j < dim; j++)
+				{
+					String coord = "(";
+					coord += Integer.toString(i);
+					coord += ",";
+					coord += Integer.toString(j);
+					coord += "): ";
+					coord += Integer.toString(bacGrid[i][j].type);
+					
+					System.out.println(coord);
+				}
+			}	
+		}
 }

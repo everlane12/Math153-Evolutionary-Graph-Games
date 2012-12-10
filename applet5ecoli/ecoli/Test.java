@@ -51,10 +51,38 @@ public class Test {
 			}
 		}*/
 		
-		Grid testGame = new Grid(2, 4, 5, 0, 0, 0);
-		testGame.printPoints();
+		Grid testGame = new Grid(2, 2, 5, 1, 10, 0);
+		testGame.printType();
+		System.out.println(testGame.repNum);
+		
 		testGame.playPD();
-		testGame.printPoints();
+		testGame.printType();
+		
+		Pair[] lowPairs = testGame.lowHighN(true);
+		Pair[] highPairs = testGame.lowHighN(false);
+		
+		for (int i = 0; i < testGame.repNum; i++)
+		{
+			// extract coords
+			int xL = lowPairs[i].x;
+			int yL = lowPairs[i].y;
+			int xH = highPairs[i].x;
+			int yH = highPairs[i].y;
+			
+			// make lower same type as upper and reset points
+			testGame.bacGrid[xL][yL].type = testGame.bacGrid[xH][yH].type;
+			
+			// give the "babies" a fourth of the points of the parents
+			//bacGrid[xL][yL].points = (int) ((1/4) * bacGrid[xH][yH].points);
+			
+			testGame.printType();
+		}
+		
+		/*testGame.dieGrow();
+		testGame.printType();
+		testGame.dieGrow();
+		testGame.printType();*/
+		
 	}
 
 }
