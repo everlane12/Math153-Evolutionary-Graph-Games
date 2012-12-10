@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class Ecology_game_1{
 
-  
+	
 	//To create the multiple rounds, have a loop that goes through the 
 	//first iteration section for the desired amount of times. Have a sleep
 	//command as well that will allow the old graphic to be displayed before
