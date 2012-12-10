@@ -1,3 +1,4 @@
+package ecology;
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -5,38 +6,91 @@ import java.applet.Applet;
 
 public class DrawingEcology extends Applet implements ActionListener{
 
-	//GUI elements
+	//GUI eZSalements
 	TextField Species_input=new TextField(5);
-	TextField Round_input=new TextField(5);
+	//TextField Round_input=new TextField(5);
 	TextField Death_input=new TextField(5);
 	TextField Resource_input=new TextField(5);
 	
-	Button goButton=new Button("Go");	
+	Button 
+		goButton,
+		nextButton;
 	
 	//program variables
-	int Species_num=0, Round_num=0,Death_num=0,Resource_num=0;
+	int Species_num=0, Death_num=0,Resource_num=0;
+	int[][] Graphics_array= new int[10][10];
+	Ecology_game_1[] game1=new Ecology_game_1[10];
+	int total_rounds=0;
+	int total_extinct=0;
+	
 	
 	public void init(){
-	
+		goButton=new Button("Go");
+		goButton.addActionListener(this);
+		nextButton=new Button("Next");
+		nextButton.addActionListener(this);
 		makeGUI();
+		
 	}
 	
 	
 	
 	
 	public void actionPerformed (ActionEvent e){
-		String cmd = e.getActionCommand();
-		
 		//deals with the action
 		//reads the numbers inputted
-		
-		if(cmd.equals("Go")){
+		if(e.getSource()==goButton){
+			total_rounds=0;
+			for(int a=0;a<10;a++){
+				for(int b=0;b<10;b++)
+					Graphics_array[a][b]=0;
+			}
 			processInput();
-			play_game();
+			play_first();
+			total_rounds++;
 			repaint();
+			//total_extinct=0;
 		}
-	}//action performed
+		if(e.getSource()==nextButton){
+			total_rounds++;
+			play_next();
+			repaint();
+			//total_extinct=0;
+		}
+		
+	}	
 	
+	public void play_first(){
+		//setting up each game
+		for(int setup=0;setup<Resource_num;setup++){
+			game1[setup]=new Ecology_game_1(Species_num);
+		}
+		//grabbing values from game
+		for(int start=0;start<Resource_num;start++){
+			game1[start].first_run();
+			total_extinct+=game1[start].extinct_counter;
+		}
+		for(int a=0;a<Resource_num;a++){
+			for(int b=0; b<Species_num;b++){
+				Graphics_array[a][b]=game1[a].graphics_matrix[b];
+				//System.out.println("Graphicsarray:"+Graphics_array[a][b]);
+				
+			}
+			
+		}
+		}
+	
+		public void play_next(){
+			//grabbing values from game
+			for(int start=0;start<Resource_num;start++){
+				game1[start].next_run();
+				total_extinct+=game1[start].extinct_counter;
+			}
+			for(int a=0;a<Resource_num;a++){
+				for(int b=0; b<Species_num;b++)
+					Graphics_array[a][b]=game1[a].graphics_matrix[b];
+			}
+		}
 	
 	
 	public void processInput(){
@@ -56,13 +110,13 @@ public class DrawingEcology extends Applet implements ActionListener{
 		
 		
 		//Get the text in the second field
-		s=Round_input.getText();
+		//s=Round_input.getText();
 		
 		//Convert it to Integer object
-		i= new Integer(s);
+		//i= new Integer(s);
 		
 		//get its int value
-		Round_num=i.intValue();
+		//Round_num=i.intValue();
 		
 		//Get the text in the third field
 		s=Death_input.getText();
@@ -84,83 +138,83 @@ public class DrawingEcology extends Applet implements ActionListener{
 		
 	}//process input
 	
-	public void play_game(){
-	
-		//Set up how many number of games based on resources
-		Ecology_game_1[] game1=new Ecology_game_1[Round_num];
-	
-		for(int setup=0;setup<Round_num;setup++)
-			game1[setup]=new Ecology_game_1(Species_num,Round_num);
-		
-		//runs games. Not on a time delay though... Will only then 
-		//output the final game. Can change later
-		for(int howmany=0; howmany<Species_num;howmany++){
-			
-			game1[howmany].first_run();
-			
-			for(int remainder=1; remainder<Resource_num;remainder++)
-				game1[howmany].next_run();
-			
-		}
-		
-	}
 	
 	
-	
+	//only used for painting
 	public void paint(Graphics g) {
-		
-		//Set up how many number of games based on resources
-		Ecology_game_1[] game1=new Ecology_game_1[Round_num];
-	
-		for(int setup=0;setup<Round_num;setup++)
-			game1[setup]=new Ecology_game_1(Species_num,Round_num);
-		
-		//runs games. Not on a time delay though... Will only then 
-		//output the final game. Can change later
-		for(int howmany=0; howmany<Species_num;howmany++){
+		int current=0,x=20,y=20;
+		for(int a=0;a<10;a++){
+			for(int b=0;b<10;b++){
+				current=Graphics_array[a][b];
+				switch (current){
+				case 1: g.setColor(Color.red);
+					break;
+				case 2: g.setColor(Color.blue);
+				break;
+				case 3: g.setColor(Color.green);
+				break;
+				case 4: g.setColor(Color.cyan);
+				break;
+				case 5: g.setColor(Color.pink);
+				break;
+				case 6: g.setColor(Color.orange);
+				break;
+				case 7: g.setColor(Color.black);
+				break;
+				case 8: g.setColor(Color.white);
+				break;
+				case 9: g.setColor(Color.magenta);
+				break;
+				case 10: g.setColor(Color.lightGray);
+				break;
+				case 11: g.setColor(Color.darkGray);
+				break;
+				case 0: 
+				break;
+				
+				}
+				if(current!=0){
+				g.fillRect(x,y,10,10);
+				x=x+15;
+				if(x>100){
+					x=20;
+					y=y+15;
+					
+				}
+				}
+			}
+			g.setColor(Color.black);
+			g.drawString("Rounds so far",240,50);
+			g.drawString(total_rounds+"", 245, 70);
 			
-			game1[howmany].first_run();
+		//	g.setColor(Color.black);
+			//g.drawString("how many died",240,150);
+			//g.drawString(total_extinct+"", 245, 170);
 			
-			for(int remainder=1; remainder<Resource_num;remainder++)
-				game1[howmany].next_run();
 			
 		}
 		
-		
-		int display=0,x=20,y=20;
-		
-		for(int no_species=0;no_species<Species_num;no_species++){
-			
-			 for(int no_species2=0;no_species2<Species_num;
-			 	 				no_species2++)
-			//transfers over the data
-			display=game1[no_species].graphics_matrix[no_species2];
-			
-			g.drawString(display+", ",x,y);
-			
-			y=y+15;
-			
-			
 		
 		}
 
-	}
+	
 	
 	
 	private void makeGUI(){
-		Label SpeciesLabel= new Label("number species:", Label.RIGHT);
-		Label RoundLabel= new Label("number species:", Label.RIGHT);
-		Label DeathLabel= new Label("input 1,2, or 3:", Label.RIGHT);
-		Label ResourceLabel= new Label("number resources:", Label.RIGHT);
+		Label SpeciesLabel= new Label("number species(1-10):", Label.RIGHT);
+		//Label RoundLabel= new Label("number rounds:", Label.RIGHT);
+		Label DeathLabel= new Label("number resources(1-10):", Label.RIGHT);
+		Label ResourceLabel= new Label("method of death(1-3):", Label.RIGHT);
 
 		//adding panels
 		Panel p1 = new Panel();
-		Panel p2 = new Panel();
+		//Panel p2 = new Panel();
 		Panel p3 = new Panel();
 		Panel p4 = new Panel();
 		Panel p5 = new Panel();
+		Panel p6 = new Panel();
 		Panel p11 = new Panel();
-		Panel p21 = new Panel();
+		//Panel p21 = new Panel();
 		Panel p31 = new Panel();
 		Panel p41 = new Panel();
 		Panel p = new Panel();
@@ -173,14 +227,14 @@ public class DrawingEcology extends Applet implements ActionListener{
 		p11.add(Species_input);
 		p1.add(p11);
 		
-		p2.setLayout(new GridLayout(1, 2));
+		/*p2.setLayout(new GridLayout(1, 2));
 		p2.setBackground(Color.cyan);
 		p2.add(RoundLabel);
 		
 		p21.setLayout(new FlowLayout(FlowLayout.LEFT));
 		p21.add(Round_input);
 		p2.add(p21);
-		
+		*/
 		
 		p3.setLayout(new GridLayout(1, 2));
 		p3.setBackground(Color.cyan);
@@ -200,22 +254,22 @@ public class DrawingEcology extends Applet implements ActionListener{
 		
 		p5.setBackground(Color.black);
 		p5.add(goButton);
+		p6.add(nextButton);
 		
 		p.setLayout(new GridLayout(5, 1));
 		p.add(p1);
-		p.add(p2);
+		//p.add(p2);
 		p.add(p3);
-		p.add(p4);
+		//p.add(p4);
 		p.add(p5);
-		
+		p.add(p6);
 		// add the panel to the applet
 		this.setLayout(new BorderLayout());
 		this.setBackground(Color.yellow);
 		add(p, "South");
 	
-		// register listener(s), if any
-		goButton.addActionListener(this);
 		
 	}//makes GUI
 	
 }
+
