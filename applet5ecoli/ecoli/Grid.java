@@ -96,24 +96,49 @@ public class Grid {
 		// stores when array is first filled
 		int counter = 0;
 		
-		// store bacteria points
-		int[] bacPoints = new int[repNum];
-		
 		// store bacteria coords, corresponding to bacPoints
-		Pair[] bacCoords = new Pair[repNum];
-		
+		LinkedList<PointCoords> bacPointCoords = new LinkedList<PointCoords>();
+				
 		// iterate over grid
 		for (int i = 0; i < dim; i++)
 		{
 			for (int j = 0; j < dim; j++)
 			{
 				// fill empty array for first X numbers
-				if (counter < repNum)
+				
+				if (counter == 0)
 				{
-					bacPoints[counter] = bacGrid[i][j].points;
-					bacCoords[counter] = new Pair(i, j);
+					Pair currPair = new Pair(i, j);
+					PointCoords currPointCoords = new PointCoords(currPair, bacGrid[i][j].points);
+					bacPointCoords.add(currPointCoords);
 					counter += 1;
 				}
+				
+				else if (counter < repNum)
+				{
+					for (int k = 0; k < counter; k++)
+					{
+						Pair compare = new Pair(bacGrid[i][j].points, bacPointCoords.get(k).points);
+						
+						if ((compare.lessThan() && lower) || (compare.greaterThan() && !lower))
+						{
+							Pair currPair = new Pair(i, j);
+							PointCoords currPointCoords = new PointCoords(currPair, bacGrid[i][j].points);
+							bacPointCoords.add(k, currPointCoords);
+							counter += 1;
+							break;
+						}
+						
+						if (k == (counter - 1))
+						{
+							Pair currPair = new Pair(i, j);
+							PointCoords currPointCoords = new PointCoords(currPair, bacGrid[i][j].points);
+							bacPointCoords.addLast(currPointCoords);
+							counter += 1;
+							break;
+						}
+					}
+				}	
 				
 				// update array with other points if needed
 				else
@@ -121,17 +146,28 @@ public class Grid {
 					for (int k = 0; k < counter; k++)
 					{
 						// make an Pair to compare either > or <
-						Pair compare = new Pair(bacGrid[i][j].points, bacPoints[k]);
+						Pair compare = new Pair(bacGrid[i][j].points, bacPointCoords.get(k).points);
 						
 						// updates arrays if lower than and want lowest or greater than and want highest
 						if ((compare.lessThan() && lower) || (compare.greaterThan() && !lower))
 						{
-							bacPoints[k] = bacGrid[i][j].points;
-							bacCoords[k] = new Pair(i, j);
+							Pair currPair = new Pair(i, j);
+							PointCoords currPointCoords = new PointCoords(currPair, bacGrid[i][j].points);
+							bacPointCoords.add(k, currPointCoords);
+							bacPointCoords.removeLast();
+							break;
 						}
+						
 					}
 				}
 			}
+		}
+		
+		Pair[] bacCoords = new Pair[counter];
+		
+		for (int i = 0; i < counter; i++)
+		{
+			bacCoords[i] = bacPointCoords.get(i).coords;						
 		}
 		
 		return bacCoords;
@@ -159,8 +195,9 @@ public class Grid {
 			bacGrid[xL][yL].type = bacGrid[xH][yH].type;
 			
 			// give the "babies" a fourth of the points of the parents
-			bacGrid[xL][yL].points = 0;
-			//bacGrid[xL][yL].points = (int) ((1/4) * bacGrid[xH][yH].points);
+			//bacGrid[xL][yL].points = 0;
+			bacGrid[xL][yL].points = (int) ((0.25) * bacGrid[xH][yH].points);
+			bacGrid[xH][yH].points -= bacGrid[xL][yL].points;
 		}
 	}
 

@@ -51,7 +51,141 @@ public class Test {
 			}
 		}*/
 		
-		Grid testGame = new Grid(2, 2, 5, 1, 10, 0);
+		
+		//Grid testGame = new Grid(3, 4, 5, 1, 10, 0);
+		
+		int[][] testGrid = new int[3][3];
+		for (int i = 0; i < 3; i ++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				testGrid[i][j] = i * j; 
+			}
+		}
+		
+		LinkedList<PointCoords> testPairs = new LinkedList<PointCoords>();
+		int counter = 0;
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (counter == 0)
+				{
+					Pair currPair = new Pair(i,j);
+					PointCoords currPC = new PointCoords(currPair, i*j);
+					testPairs.add(0, currPC);
+					counter += 1;
+				}
+				else if (counter < 4)
+				{
+					for (int k = 0; k < counter; k ++)
+					{
+						if (testPairs.get(k).points > (i*j))
+						{
+							Pair currPair = new Pair(i,j);
+							PointCoords currPC = new PointCoords(currPair, i*j);
+							testPairs.add(k, currPC);
+							counter += 1;
+							break;
+						}
+						
+						if (k == (counter - 1))
+						{
+							Pair currPair = new Pair(i,j);
+							PointCoords currPC = new PointCoords(currPair, i*j);
+							testPairs.addLast(currPC);
+							counter += 1;
+							break;
+						}
+					}
+				}
+				
+				else
+				{
+					for(int k = 0; k < counter; k++)
+					{
+						if (testPairs.get(k).points > (i*j))
+						{
+							Pair currPair = new Pair(i,j);
+							PointCoords currPC = new PointCoords(currPair, i*j);
+							testPairs.add(k, currPC);
+							testPairs.removeLast();
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		for (int i = 0; i < counter; i++)
+		{
+			System.out.println(testPairs.get(i).coords.x);
+			System.out.println(testPairs.get(i).coords.y);
+		}
+
+		LinkedList<PointCoords> testPairsH = new LinkedList<PointCoords>();
+		int counterH = 0;
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (counterH == 0)
+				{
+					Pair currPair = new Pair(i,j);
+					PointCoords currPC = new PointCoords(currPair, i*j);
+					testPairsH.add(currPC);
+					counterH += 1;
+				}
+				else if (counterH < 4)
+				{
+					for (int k = 0; k < counterH; k ++)
+					{
+						if (testPairsH.get(k).points < (i*j))
+						{
+							Pair currPair = new Pair(i,j);
+							PointCoords currPC = new PointCoords(currPair, i*j);
+							testPairsH.add(k, currPC);
+							counterH += 1;
+							break;
+						}
+						
+
+						if (k == (counter - 1))
+						{
+							Pair currPair = new Pair(i,j);
+							PointCoords currPC = new PointCoords(currPair, i*j);
+							testPairs.addLast(currPC);
+							counter += 1;
+							break;
+						}
+					}
+				}
+				
+				else
+				{
+					for(int k = 0; k < counterH; k++)
+					{
+						if (testPairsH.get(k).points < (i*j))
+						{
+							Pair currPair = new Pair(i,j);
+							PointCoords currPC = new PointCoords(currPair, i*j);
+							testPairsH.add(k, currPC);
+							testPairsH.removeLast();
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		for (int i = 0; i < counterH; i++)
+		{
+			System.out.println(testPairsH.get(i).coords.x);
+			System.out.println(testPairsH.get(i).coords.y);
+		}
+		
+		
+		/*
 		testGame.printType();
 		System.out.println(testGame.repNum);
 		
@@ -61,7 +195,18 @@ public class Test {
 		Pair[] lowPairs = testGame.lowHighN(true);
 		Pair[] highPairs = testGame.lowHighN(false);
 		
-		for (int i = 0; i < testGame.repNum; i++)
+		for (int i = 0; i < lowPairs.length; i ++)
+		{
+			System.out.println(lowPairs[i].x);
+			System.out.println(lowPairs[i].y);
+		}
+		for (int i = 0; i < highPairs.length; i ++)
+		{
+			System.out.println(highPairs[i].x);
+			System.out.println(highPairs[i].y);
+		}*/
+		
+		/*for (int i = 0; i < testGame.repNum; i++)
 		{
 			// extract coords
 			int xL = lowPairs[i].x;
@@ -76,12 +221,21 @@ public class Test {
 			//bacGrid[xL][yL].points = (int) ((1/4) * bacGrid[xH][yH].points);
 			
 			testGame.printType();
-		}
+		}*/
 		
 		/*testGame.dieGrow();
 		testGame.printType();
 		testGame.dieGrow();
 		testGame.printType();*/
+		/*
+		for (int k = 0; k < 5; k++)
+		{
+			System.out.println(k);
+			if (k == 2)
+			{
+				break;
+			}
+		}*/
 		
 	}
 

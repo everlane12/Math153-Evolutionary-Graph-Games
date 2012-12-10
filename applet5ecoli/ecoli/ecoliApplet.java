@@ -228,13 +228,18 @@ public class ecoliApplet extends Applet implements ActionListener {
 		if (gameStatus == -1)
 		{
 			// draws decorative ecoli bacteria
-			for (int i = 0; i < 3; i++)
+			g.setColor(CCOLOR);
+			g.fillOval(350, 50, BACSIZE, BACSIZE);
+			g.setColor(DCOLOR);
+			g.fillOval(380, 50, BACSIZE, BACSIZE);
+			
+			/*for (int i = 0; i < 3; i++)
 			{
 				g.setColor(CCOLOR);
 				g.fillOval(50, 75 + 200 * i, BACSIZE, BACSIZE);
 				g.setColor(DCOLOR);
 				g.fillOval(50, 175 + 200 * i, BACSIZE, BACSIZE);
-			}
+			}*/
 			
 			// prints instructions
 			g.setColor(Color.darkGray);
@@ -243,10 +248,11 @@ public class ecoliApplet extends Applet implements ActionListener {
 			g.drawString("play Prisoner's Dilemma (PD) with neighboring fellow E. coli bacteria. Every round, each", 100, 140);
 			g.drawString("bacteria plays PD with all 8 of its neighbors and receives points accordingly. Every x", 100, 160);
 			g.drawString("round, the lowest 40% E. coli in terms of points dies while the highest 40% reproduces", 100, 180);
-			g.drawString("randomly into a vacant spot. Define a square grid with up to 15x15 dimensions, the number of ", 100, 200);
-			g.drawString("cooperating E. coli (we'll calculate the rest as defecting E. coli), as well as the", 100, 220);
-			g.drawString("Prisoner's Dilemma payoff matrix and the timestep interval for the birth-death process", 100, 240);
-			g.drawString("Please enter inputs below and press Go.", 100, 280);
+			g.drawString("randomly into a vacant spot. The new \"baby\" E. coli are given 25% of the parental points", 100, 200);
+			g.drawString("(parent loses 25%). Define a square grid with up to 15x15 dimensions, the number of ", 100, 220);
+			g.drawString("cooperating E. coli (we'll calculate the rest as defecting E. coli), as well as the", 100, 240);
+			g.drawString("Prisoner's Dilemma payoff matrix and the timestep interval for the birth-death process", 100, 260);
+			g.drawString("Please enter inputs below and press Go.", 100, 300);
 			
 			String[] descriptStr = {"Dim = dimesion of the grid (max 15)",
 				"C Num = number of cooperators (max Dim * Dim)",
@@ -259,7 +265,7 @@ public class ecoliApplet extends Applet implements ActionListener {
 			g.setColor(Color.darkGray);
 			for (int i = 0; i < CONSTSNUM; i++)
 			{
-				g.drawString(descriptStr[i], 140, 320 + (20 * i));
+				g.drawString(descriptStr[i], 140, 340 + (20 * i));
 			}
 		}
 		
@@ -267,13 +273,18 @@ public class ecoliApplet extends Applet implements ActionListener {
 		if (gameStatus == 0)
 		{
 			// draws decorative ecoli bacteria
-			for (int i = 0; i < 3; i++)
+			g.setColor(CCOLOR);
+			g.fillOval(350, 50, BACSIZE, BACSIZE);
+			g.setColor(DCOLOR);
+			g.fillOval(380, 50, BACSIZE, BACSIZE);
+			
+			/*for (int i = 0; i < 3; i++)
 			{
 				g.setColor(CCOLOR);
 				g.fillOval(50, 75 + 200 * i, BACSIZE, BACSIZE);
 				g.setColor(DCOLOR);
 				g.fillOval(50, 175 + 200 * i, BACSIZE, BACSIZE);
-			}
+			}*/
 			
 			g.setColor(Color.darkGray);
 			
