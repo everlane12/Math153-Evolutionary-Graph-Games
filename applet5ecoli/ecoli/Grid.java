@@ -163,9 +163,9 @@ public class Grid {
 			}
 		}
 		
-		Pair[] bacCoords = new Pair[counter];
+		Pair[] bacCoords = new Pair[repNum];
 		
-		for (int i = 0; i < counter; i++)
+		for (int i = 0; i < repNum; i++)
 		{
 			bacCoords[i] = bacPointCoords.get(i).coords;						
 		}
@@ -213,7 +213,7 @@ public class Grid {
 				self = 2;
 			}
 			
-			else if ((xH == dim - 1) && (yH == 0))
+			else if ((xH == dim - 1) && (yH == dim - 1))
 			{
 				self = 3;
 			}
